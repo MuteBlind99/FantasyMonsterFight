@@ -1,126 +1,255 @@
-#include <chrono>
+
 #include <iostream>
+#include "Fight.h"
+#include "Monster.h"
 
-
-int monster2 = 0;
-int monster1 = 0;
-
-int fighter1;
-int fighter2;
-
-int speedmonster1;
-int speedmonster2;
-
-int hpmonster2;
-int hpmonster1;
-
-const char* racemonster1;
-const char* racemonster2;
-
-int attackmonster1;
-int attackmonster2;
-
-int defensemonster1;
-int defensemonster2;
 
 int main()
 {
-	std::cout << "Bien le bonjour invocateur, Choisissez 2 créatures pour le combat" << std::endl;
+	int monster1 = 0;
+	int monster2 = 0;
+
+
+
+	Monster monsterA;
+	Monster monsterB;
+
+
+	std::cout << "Bien le bonjour invocateur, Choisissez 2 creatures pour le combat" << std::endl;
 	std::cout << "Ork [1] , Troll [2] , Goblin [3]" << std::endl;
-	const char* racemonster1;
+
+
 	std::cin >> monster1;
 	std::cin >> monster2;
-	
-	switch (monster1)
-	{
-	case 1:
-		racemonster1 = "Ork";
-		hpmonster1 = 5;
-		attackmonster1 = 5;
-		speedmonster1 = 5;
-		defensemonster1 = 5;
-		break;
 
-	case 2:
-		racemonster1 = "Troll";
-		hpmonster1 = 8;
-		attackmonster1 = 8;
-		speedmonster1 = 8;
-		defensemonster1 = 8;
-		break;
+	int  roundnumb = 0;
+	bool nowinner = true;
+	bool battlestep;
 
-	case 3:
-		racemonster1 = "Goblin";
-		hpmonster1 = 3;
-		attackmonster1 = 3;
-		speedmonster1 = 3;
-		defensemonster1 = 3;
-		break;
+	int damage1 = 0;
+	int damage2 = 0;
+	int resultDamage = 0;
 
-	default:
-		std::cout << "Choix invalid" << std::endl;
-		return EXIT_FAILURE;
-		break;
-	}
-	switch (monster2)
-	{
-	case 1:
-		racemonster2 = "Ork";
-		hpmonster2 = 5;
-		attackmonster2 = 5;
-		speedmonster2= 5;
-		defensemonster2 = 5;
-		break;
+	char reset = 'none';
+	bool resetloop = true;
 
-	case 2:
-		racemonster2 = "Troll";
-		hpmonster2 = 8;
-		attackmonster2 = 8;
-		speedmonster2 = 8;
-		defensemonster2 = 8;
-		break;
+	Monster orc("Willy", "Ork", 60, 100, 50, 80);
+	Monster troll("Pol", "Troll", 30, 100, 70, 70);
+	Monster goblin("Zemmour", "Goblin", 90, 100, 66, 60);
+	// Selection des monstres
 
-	case 3:
-		racemonster2 = "Goblin";
-		hpmonster2 = 3;
-		attackmonster2 = 3;
-		speedmonster2 = 3;
-		defensemonster2 = 3;
-		break;
-
-	default:
-		std::cout << "Choix invalid" << std::endl;
-		return EXIT_FAILURE;
-		break;
-	}
-	std::cout << "Vous avez choisi :" << racemonster1 << " et " << racemonster2 << std::endl;
-
-
-
+	bool gameLoop = true;
 	do
 	{
-		if (speedmonster1 < speedmonster2)
-		{
 
-		}
-		else if (speedmonster2 < speedmonster1)
+
+		switch (monster1)
 		{
+		case 1:
+			monsterA = orc;
+			break;
+		case 2:
+			monsterA = troll;
+			break;
+		case 3:
+			monsterA = goblin;
+			break;
+		default:
+
+			std::cout << "Invalide Command" << std::endl;
+
+			break;
+		}
+		std::cout << "You summon : " + monsterA.get_name() << std::endl << std::endl;
+		std::cout << "Race : " << monsterA.get_race() << '\n' << "HP: " << monsterA.get_hp() << " ATK: " << monsterA.get_atk() << " DEF: " << monsterA.get_def() << " SPEED: " << monsterA.get_speed() << std::endl << std::endl;
+
+		switch (monster2)
+		{
+		case 1:
+			monsterB = orc;
+			break;
+		case 2:
+			monsterB = troll;
+			break;
+		case 3:
+			monsterB = goblin;
+			break;
+		default:
+
+			std::cout << "Invalide Command" << std::endl;
+
+			break;
+		}
+
+		std::cout << "You summon : " << monsterB.get_name() << std::endl << std::endl;
+		std::cout << "Race : " << monsterB.get_race() << '\n' << "HP: " << monsterB.get_hp() << " ATK: " << monsterB.get_atk() << " DEF: " << monsterB.get_def() << " SPEED: " << monsterB.get_speed() << std::endl << std::endl;
+
+
+		Fight(monsterA.get_name(), monsterB.get_name());
+		// Comparaison de vitesse
+		if (monsterA.GetFirstAtk(monsterB.get_speed()))
+		{
+			battlestep = true;
+		}
+		else
+		{
+			battlestep = false;
+		}
+
+		//Combat tant qu'un monstre est vivant
+		while (gameLoop)
+		{
+			
+			damage1 = monsterA.get_atk() - monsterA.get_def();//Dégat du monstre A sur B
+			damage2 = monsterB.get_atk() - monsterA.get_def();//Dégat du monstre B sur A
+
+			// Compteur de round
+			roundnumb += 1;
+
+			damage1 = monsterA.get_atk() - monsterB.get_def();
+			damage2 = monsterB.get_atk() - monsterA.get_def();
+
+			//Qui frappe le premier ?
+			switch (battlestep)
+			{
+			case true:// Si monsterA est premier
+				if (damage1 > 0)
+				{
+					
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					std::cout << monsterA.get_name() << " do the first move" << std::endl;
+
+					monsterB.GetDamage(damage1, resultDamage,nowinner);
+
+					std::cout << monsterB.get_name() << " -" << damage1 << " HP" << std::endl;
+
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					monsterA.GetDamage(damage2, resultDamage,nowinner);
+
+					std::cout << monsterA.get_name() << " -" << damage2 << " HP" << std::endl;
+				}//L attaque du monstre A est superieur a la defense de B
+				else
+				{
+					
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					std::cout << monsterA.get_name() << " do the first move" << std::endl;
+
+					monsterB.GetDamage(damage1, resultDamage,nowinner);
+
+					std::cout << monsterB.get_name() << " -" << damage1 << " HP" << std::endl;
+
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					monsterA.GetDamage(damage2, resultDamage,nowinner);
+
+					std::cout << monsterA.get_name() << " -" << damage2<< " HP" << std::endl;
+
+				}
+
+
+				break;
+			case false:// Si monsterB est premier
+				// L attaque du monstre B est superieur a la defense de A
+				if (damage2 > 0)
+				{
+					
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					std::cout << monsterB.get_name() << " do the first move" << std::endl;
+
+					monsterA.GetDamage(damage2, resultDamage,nowinner);
+					//damage2 = monsterB.get_atk() - monsterA.get_def();
+					std::cout << monsterA.get_name() << " -" << damage2 << " HP" << std::endl;
+
+
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					monsterB.GetDamage(damage1, resultDamage, nowinner);
+					//damage1 = monsterA.get_atk() - monsterB.get_def();
+					std::cout << monsterB.get_name() << " -" << damage1 << " HP" << std::endl;
+
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+				}
+				else
+				{
+					
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					std::cout << monsterB.get_name() << " do the first move" << std::endl;
+
+					monsterA.GetDamage(damage2, resultDamage,nowinner);
+					//damage2 = monsterB.get_atk() - monsterA.get_def();
+					std::cout << monsterA.get_name() << " -" << damage2 << " HP" << std::endl;
+
+
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+					monsterB.GetDamage(damage1, resultDamage,nowinner);
+					//damage1 = monsterA.get_atk() - monsterB.get_def();
+					std::cout << monsterB.get_name() << " -" << damage1 << " HP" << std::endl;
+
+					std::cout << "---------------------------------------------------------------------" << std::endl;
+				}
+
+
+				break;
+
+			}
+			std::cout << "---------------------------------------------------------------------" << std::endl;
+			std::cout << "Round :" << roundnumb << std::endl;
+
+			std::cout << monsterA.get_name() << std::endl << "HP :" << monsterA.get_hp() << std::endl << std::endl;
+
+
+			std::cout << monsterB.get_name() << std::endl << "HP :" << monsterB.get_hp() << std::endl << std::endl;
+
+			system("pause");
+		}
+		if (monsterA.IsAlive()== true)
+		{
+			if (monsterB.IsAlive()== true)
+			{
+				gameLoop = true;
+			}
+			else
+			{
+				std::cout << "The winner is :" << monsterA.get_name() << std::endl;
+				gameLoop = false;
+			}
 
 		}
 		else
 		{
-
+			std::cout << "The winner is :" << monsterB.get_name() << std::endl;
+			gameLoop = false;
 		}
 
-	} while (hpmonster1 > 0 || hpmonster2 > 0);
 
 
-}
-/*int Fight()
-{
-
-	while (hpmonster1 > 0 || hpmonster2 > 0)
+	} while (gameLoop);
+	while (resetloop)
 	{
 
+
+		std::cout << "---------------------------------------------------------------------" << std::endl;
+		std::cout << "Continue ? [y]/[n]" << std::endl;
+		std::cin >> reset;
+		switch (reset)
+		{
+		case 'y':
+			gameLoop = true;
+			resetloop = false;
+			break;
+		case 'Y':
+			gameLoop = true;
+			resetloop = false;
+			break;
+		case 'n':
+			std::cout << "Bye Bye...";
+			break;
+		case 'N':
+			gameLoop = false;
+			break;
+		default:
+
+			return EXIT_FAILURE;
+		}
 	}
-}*/
+}
+
+
